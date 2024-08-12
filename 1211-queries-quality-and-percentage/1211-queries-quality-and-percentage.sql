@@ -1,2 +1,9 @@
-SELECT query_name,ROUND(SUM(quality)/count(*),2) AS quality,ROUND((1*1.0/COUNT(*)*1.0)*100,2) AS poor_query_percentage  FROM (SELECT query_name,rating*1.0/position*1.0 AS quality FROM Queries ) AS result
-GROUP BY  query_name
+
+select query_name, 
+round(avg(1.0 * rating / position), 2)
+as quality,
+round(sum(iif(rating<3, 100.0, 0)) / count(rating), 2)
+as poor_query_percentage
+from Queries
+group by query_name
+having query_name is not null;
